@@ -5,6 +5,7 @@ import com.api.register.dto.StudentDto;
 import com.api.register.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -54,4 +55,15 @@ public class StudentController {
         studentService.update(student);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping(path = "/page")
+    public ResponseEntity<Page<StudentDto>> findPage(
+            @RequestParam(value="page", defaultValue="0") Integer page,
+            @RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage,
+            @RequestParam(value="orderBy", defaultValue="name") String orderBy,
+            @RequestParam(value="direction", defaultValue="ASC") String direction) {
+        Page<Student> list = studentService.findPage(page, linesPerPage, orderBy, direction);
+        Page<StudentDto> listDto = list.map(StudentDto::new);
+        return ResponseEntity.ok().body(listDto);
+    }
+
 }

@@ -4,6 +4,9 @@ import com.api.register.domain.Student;
 import com.api.register.dto.StudentDto;
 import com.api.register.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -52,5 +55,10 @@ public class StudentService {
         studentUpdate.setSex(student.getSex());
         studentUpdate.setResponsible(student.getResponsible());
         studentUpdate.setAddress(student.getAddress());
+    }
+
+    public Page<Student> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return studentRepository.findAll(pageRequest);
     }
 }

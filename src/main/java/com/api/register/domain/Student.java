@@ -10,7 +10,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import java.util.Date;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
@@ -18,22 +20,35 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class student {
+public class Student implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String address;
+    private LocalDate age;
     private String sex;
     private String responsible;
-    private Date age;
+    private String address;
 
+    public Student(Student student) {
+    }
+    public Student(Integer id, String name, LocalDate age, String sex,
+                   String responsible, String address ) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.sex = sex;
+        this.responsible = responsible;
+        this.address = address;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        student student = (student) o;
+        Student student = (Student) o;
         return getId() != null && Objects.equals(getId(), student.getId());
     }
 

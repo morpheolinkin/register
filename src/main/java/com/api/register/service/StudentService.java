@@ -25,14 +25,32 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Student save(Student obj) {
+    public void save(Student obj) {
         obj.setId(null);
-        return studentRepository.save(obj);
+        studentRepository.save(obj);
     }
 
     public Student fromDTO(StudentDto dto) {
         return new Student(dto.getId(), dto.getName(),
                 dto.getAge(), dto.getSex(), dto.getResponsible(),
                 dto.getAddress());
+    }
+
+    public void delete(Integer id) {
+        studentRepository.delete(findById(id));
+    }
+
+    public void update(Student student) {
+        var studentUpdate = findById(student.getId());
+        upadateData(studentUpdate, student);
+        studentRepository.save(studentUpdate);
+    }
+
+    private void upadateData(Student studentUpdate, Student student) {
+        studentUpdate.setName(student.getName());
+        studentUpdate.setAge(student.getAge());
+        studentUpdate.setSex(student.getSex());
+        studentUpdate.setResponsible(student.getResponsible());
+        studentUpdate.setAddress(student.getAddress());
     }
 }

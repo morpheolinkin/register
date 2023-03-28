@@ -41,4 +41,17 @@ public class StudentController {
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> delete (@PathVariable Integer id){
+        studentService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Void> update(@RequestBody StudentDto obj, @PathVariable Integer id){
+        Student student = studentService.fromDTO(obj);
+        student.setId(id);
+        studentService.update(student);
+        return ResponseEntity.noContent().build();
+    }
 }

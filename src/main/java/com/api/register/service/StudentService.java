@@ -34,9 +34,9 @@ public class StudentService {
     }
 
     public Student fromDTO(StudentDto dto) {
-        return new Student(dto.getId(), dto.getName(),
-                dto.getAge(), dto.getSex(), dto.getResponsible(),
-                dto.getAddress());
+        return new Student(dto.id(), dto.name(),
+                dto.age(), dto.sex(), dto.responsible(),
+                dto.address());
     }
 
     public void delete(Integer id) {

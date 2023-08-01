@@ -19,51 +19,53 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
+
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Student> list (@PathVariable Integer id){
-       return ResponseEntity.ok(studentService.findById(id));
+    public ResponseEntity<Student> list(@PathVariable Integer id) {
+        return ResponseEntity.ok(studentService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<StudentDto>> listAll(){
+    public ResponseEntity<List<StudentDto>> listAll() {
         List<Student> obj = studentService.listAll();
         List<StudentDto> dtoList = obj.stream().map(StudentDto::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(dtoList);
     }
 
     @PostMapping
-    public ResponseEntity<Student> insert(@Valid @RequestBody StudentDto dto){
+    public ResponseEntity<Student> insert(@Valid @RequestBody StudentDto dto) {
         var obj = studentService.fromDTO(dto);
         studentService.save(obj);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("{/id}")
-                .buildAndExpand(dto.getId())
+                .buildAndExpand(dto.id())
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
+
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete (@PathVariable Integer id){
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         studentService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Void> update(@RequestBody StudentDto obj, @PathVariable Integer id){
+    public ResponseEntity<Void> update(@RequestBody StudentDto obj, @PathVariable Integer id) {
         Student student = studentService.fromDTO(obj);
         student.setId(id);
         studentService.update(student);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping(path = "/page")
     public ResponseEntity<Page<StudentDto>> findPage(
-            @RequestParam(value="page", defaultValue="0") Integer page,
-            @RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage,
-            @RequestParam(value="orderBy", defaultValue="name") String orderBy,
-            @RequestParam(value="direction", defaultValue="ASC") String direction) {
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Page<Student> list = studentService.findPage(page, linesPerPage, orderBy, direction);
         Page<StudentDto> listDto = list.map(StudentDto::new);
         return ResponseEntity.ok().body(listDto);
     }
-
 }

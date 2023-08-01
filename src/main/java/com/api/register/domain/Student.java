@@ -4,10 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.io.Serial;
@@ -15,11 +12,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@Entity
+@Getter @Setter @ToString
+@NoArgsConstructor @Entity
 public class Student implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,8 +26,6 @@ public class Student implements Serializable {
     private String responsible;
     private String address;
 
-    public Student(Student student) {
-    }
     public Student(Integer id, String name, LocalDate age, String sex,
                    String responsible, String address ) {
         this.id = id;

@@ -1,17 +1,9 @@
 package com.api.register;
 
-import com.api.register.domain.Student;
-import com.api.register.repository.StudentRepository;
-import com.api.register.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-
-import static java.util.Arrays.asList;
 
 @SpringBootApplication
 @RequiredArgsConstructor

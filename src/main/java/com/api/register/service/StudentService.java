@@ -36,7 +36,7 @@ public class StudentService {
     public Student fromDTO(StudentDto dto) {
         return new Student(dto.id(), dto.name(),
                 dto.age(), dto.sex(), dto.responsible(),
-                dto.address());
+                dto.address(), dto.cpf(), dto.rg(), dto.birth_certificate());
     }
 
     public void delete(Integer id) {

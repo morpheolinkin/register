@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -33,15 +32,11 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> insert(@Valid @RequestBody StudentDto dto) {
-        var obj = studentService.fromDTO(dto);
-        studentService.save(obj);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("{/id}")
-                .buildAndExpand(dto.id())
-                .toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<Student> createStudent(@Valid @RequestBody StudentDto studentDto) {
+        Student newStudent = studentService.convertFromDTO(studentDto);
+        studentService.save(newStudent);
+        URI newStudentUri = studentService.buildNewStudentUri(studentDto);
+        return ResponseEntity.created(newStudentUri).build();
     }
 
     @DeleteMapping(path = "/{id}")
@@ -52,7 +47,7 @@ public class StudentController {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> update(@RequestBody StudentDto obj, @PathVariable Integer id) {
-        Student student = studentService.fromDTO(obj);
+        Student student = studentService.convertFromDTO(obj);
         student.setId(id);
         studentService.update(student);
         return ResponseEntity.noContent().build();

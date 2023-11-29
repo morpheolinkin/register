@@ -10,7 +10,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @Service
@@ -33,7 +35,7 @@ public class StudentService {
         studentRepository.save(obj);
     }
 
-    public Student fromDTO(StudentDto dto) {
+    public Student convertFromDTO(StudentDto dto) {
         return new Student(dto.id(), dto.name(),
                 dto.age(), dto.sex(), dto.responsible(),
                 dto.address(), dto.cpf(), dto.rg(), dto.birth_certificate());
@@ -60,5 +62,13 @@ public class StudentService {
     public Page<Student> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
         return studentRepository.findAll(pageRequest);
+    }
+
+    public URI buildNewStudentUri(StudentDto studentDto) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("{/id}")
+                .buildAndExpand(studentDto.id())
+                .toUri();
     }
 }

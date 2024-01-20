@@ -1,15 +1,17 @@
 package com.api.register.dto;
 
 import com.api.register.domain.Student;
+import com.api.register.enums.Sex;
+
 import java.time.LocalDate;
 
 public record StudentDto
         (Integer id, String name, LocalDate age,
-         String sex, String responsible, String address,
-         String cpf, String rg, String birth_certificate) {
+         Sex sex, String responsible, String address,
+         String cpf, String rg, String birthCertificate) {
     public StudentDto(Student obj){
         this(obj.getId(), obj.getName(), obj.getAge(), obj.getSex(),
                 obj.getResponsible(), obj.getAddress(),
-                obj.getCpf(), obj.getRg(), obj.getBirth_certificate());
+                obj.getCpf(), obj.getRg(), obj.getBirthCertificate());
     }
 }

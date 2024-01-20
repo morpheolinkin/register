@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/students")
@@ -27,7 +26,7 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<StudentDto>> listAll() {
         List<Student> obj = studentService.listAll();
-        List<StudentDto> dtoList = obj.stream().map(StudentDto::new).collect(Collectors.toList());
+        List<StudentDto> dtoList = obj.stream().map(StudentDto::new).toList();
         return ResponseEntity.ok().body(dtoList);
     }
 

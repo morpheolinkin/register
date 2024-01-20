@@ -38,7 +38,7 @@ public class StudentService {
     public Student convertFromDTO(StudentDto dto) {
         return new Student(dto.id(), dto.name(),
                 dto.age(), dto.sex(), dto.responsible(),
-                dto.address(), dto.cpf(), dto.rg(), dto.birth_certificate());
+                dto.address(), dto.cpf(), dto.rg(), dto.birthCertificate());
     }
 
     public void delete(Integer id) {

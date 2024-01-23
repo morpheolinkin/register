@@ -3,17 +3,21 @@ package com.api.register.domain;
 import com.api.register.enums.Sex;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Getter @Setter @ToString
-@NoArgsConstructor @Entity @Builder
-@AllArgsConstructor @Table(name = "tb_student")
+@NoArgsConstructor @Entity
+@Table(name = "tb_student")
 public class Student implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -31,7 +35,24 @@ public class Student implements Serializable {
     private String cpf;
     private String rg;
     private String birthCertificate;
+    @OneToMany
+    @ToString.Exclude
+    private List<Turma> turmaList;
 
+    public Student(Integer id, @NotBlank(message = "Name is required") String name,
+                   LocalDate age, Sex sex, String responsible,
+                   String address, @CPF String cpf, String rg,
+                   String birthCertificate) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.sex = sex;
+        this.responsible = responsible;
+        this.address = address;
+        this.cpf = cpf;
+        this.rg = rg;
+        this.birthCertificate = birthCertificate;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -3,10 +3,7 @@ package com.api.register.domain;
 import com.api.register.enums.Sex;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serial;
@@ -15,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-@Getter @Setter @ToString
+@Getter @Setter
 @NoArgsConstructor @Entity
 @Table(name = "tb_student")
 public class Student implements Serializable {
@@ -23,7 +20,7 @@ public class Student implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @NotBlank(message = "Name is required")
     private String name;
     private LocalDate age;
@@ -35,14 +32,22 @@ public class Student implements Serializable {
     private String cpf;
     private String rg;
     private String birthCertificate;
-    @OneToMany
-    @ToString.Exclude
-    private List<Turma> turmaList;
 
-    public Student(Integer id, @NotBlank(message = "Name is required") String name,
-                   LocalDate age, Sex sex, String responsible,
-                   String address, @CPF String cpf, String rg,
-                   String birthCertificate) {
+    @ManyToOne
+    @JoinColumn(name = "turma_id")
+    private Turma turma;
+
+    @ManyToMany
+    @JoinTable(
+            name = "STUDENT_DISCIPLINA",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "disciplina_id")
+    )
+    private List<Disciplina> disciplinas;
+
+    @Builder
+    private Student(Long id, String name, LocalDate age, Sex sex, String responsible,
+                    String address, String cpf, String rg, String birthCertificate) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -53,6 +58,7 @@ public class Student implements Serializable {
         this.rg = rg;
         this.birthCertificate = birthCertificate;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

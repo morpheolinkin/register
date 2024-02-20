@@ -3,6 +3,7 @@ package com.api.register.controller;
 
 import com.api.register.domain.Student;
 import com.api.register.dto.StudentDto;
+import com.api.register.dto.StudentResponseDto;
 import com.api.register.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Student> list(@PathVariable Integer id) {
+    public ResponseEntity<StudentResponseDto> list(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.findById(id));
     }
 
@@ -40,13 +41,13 @@ public class StudentController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         studentService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Void> update(@RequestBody StudentDto obj, @PathVariable Integer id) {
+    public ResponseEntity<Void> update(@RequestBody StudentDto obj, @PathVariable Long id) {
         Student student = studentService.convertFromDTO(obj);
         student.setId(id);
         studentService.update(student);

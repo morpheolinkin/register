@@ -2,14 +2,14 @@ package com.api.register.service;
 
 import com.api.register.domain.Student;
 import com.api.register.dto.StudentDto;
+import com.api.register.dto.StudentResponseDto;
 import com.api.register.repository.StudentRepository;
+import com.api.register.service.exceptions.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -21,10 +21,18 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
 
-    public Student findById(Integer id) {
-        return studentRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException
-                        (HttpStatus.BAD_REQUEST, "Student not found"));
+    public StudentResponseDto findById(Long id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException
+                        ("Student not found! Id: " + id + ", Type: " + Student.class.getName()));
+        //No corpo da requisição será retornado um objeto personalizado com os dados do aluno contendo apenas os dados que eu quero
+        return new StudentResponseDto(
+                student.getId(),
+                student.getName(),
+                student.getCpf(),
+                student.getTurma(),
+                student.getDisciplinas()
+        );
     }
     public List<Student> listAll() {
         return studentRepository.findAll();
@@ -36,20 +44,34 @@ public class StudentService {
     }
 
     public Student convertFromDTO(StudentDto dto) {
-        return new Student(dto.id(), dto.name(),
-                dto.age(), dto.sex(), dto.responsible(),
-                dto.address(), dto.cpf(), dto.rg(), dto.birthCertificate());
+        return Student.builder()
+                .id(dto.id())
+                .name(dto.name())
+                .age(dto.age())
+                .sex(dto.sex())
+                .responsible(dto.responsible())
+                .address(dto.address())
+                .cpf(dto.cpf())
+                .rg(dto.rg())
+                .birthCertificate(dto.birthCertificate())
+                .build();
     }
 
-    public void delete(Integer id) {
-        studentRepository.delete(findById(id));
-    }
+    public Student findStudentById(Long id) {
+    return studentRepository.findById(id)
+            .orElseThrow(() -> new ObjectNotFoundException
+                    ("Student not found! Id: " + id + ", Type: " + Student.class.getName()));
+}
 
-    public void update(Student student) {
-        var studentUpdate = findById(student.getId());
-        upadateData(studentUpdate, student);
-        studentRepository.save(studentUpdate);
-    }
+public void delete(Long id) {
+    studentRepository.delete(findStudentById(id));
+}
+
+public void update(Student student) {
+    var studentUpdate = findStudentById(student.getId());
+    upadateData(studentUpdate, student);
+    studentRepository.save(studentUpdate);
+}
 
     private void upadateData(Student studentUpdate, Student student) {
         studentUpdate.setName(student.getName());

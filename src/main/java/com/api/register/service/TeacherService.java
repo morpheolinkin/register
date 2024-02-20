@@ -3,13 +3,12 @@ package com.api.register.service;
 import com.api.register.domain.Teacher;
 import com.api.register.dto.TeacherDto;
 import com.api.register.repository.TeacherRepository;
+import com.api.register.service.exceptions.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -23,8 +22,8 @@ public class TeacherService {
 
     public Teacher findById(Integer id) {
         return teacherRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException
-                        (HttpStatus.BAD_REQUEST, "Teacher not found"));
+                .orElseThrow(() -> new ObjectNotFoundException
+                        ("Teacher not found! Id: " + id + ", Type: " + Teacher.class.getName()));
     }
     public List<Teacher> listAll() {
         return teacherRepository.findAll();
@@ -45,13 +44,13 @@ public class TeacherService {
         teacherRepository.delete(findById(id));
     }
 
-    public void update(Teacher Teacher) {
-        var teacherUpdate = findById(Teacher.getId());
-        upadateData(teacherUpdate, Teacher);
+    public void update(Teacher teacher) {
+        var teacherUpdate = findById(teacher.getId());
+        updateData(teacherUpdate, teacher);
         teacherRepository.save(teacherUpdate);
     }
 
-    private void upadateData(Teacher teacherUpdate, Teacher teacher) {
+    private void updateData(Teacher teacherUpdate, Teacher teacher) {
         teacherUpdate.setName(teacher.getName());
         teacherUpdate.setAge(teacher.getAge());
         teacherUpdate.setSex(teacher.getSex());

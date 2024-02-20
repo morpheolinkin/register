@@ -6,7 +6,7 @@ import com.api.register.enums.Sex;
 import java.time.LocalDate;
 
 public record StudentDto
-        (Integer id, String name, LocalDate age,
+        (Long id, String name, LocalDate age,
          Sex sex, String responsible, String address,
          String cpf, String rg, String birthCertificate) {
     public StudentDto(Student obj){

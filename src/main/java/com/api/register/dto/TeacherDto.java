@@ -1,6 +1,5 @@
 package com.api.register.dto;
 
-import com.api.register.domain.Student;
 import com.api.register.domain.Teacher;
 import com.api.register.enums.Sex;
 

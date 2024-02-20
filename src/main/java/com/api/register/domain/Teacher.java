@@ -1,9 +1,13 @@
 package com.api.register.domain;
 
 import com.api.register.enums.Sex;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serial;
@@ -12,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-@Getter @Setter @ToString
+@Getter @Setter
 @NoArgsConstructor @Entity
 @Table(name = "tb_teacher")
 public class Teacher implements Serializable {
@@ -29,11 +33,28 @@ public class Teacher implements Serializable {
     private String address;
     @CPF
     private String cpf;
-    @OneToMany
-    @ToString.Exclude
-    private List<Disciplina> disciplinaList;
 
-    public Teacher(Integer id, String name, LocalDate age, Sex sex, String address, String cpf) {
+    @ManyToMany
+    @JoinTable(
+            name = "teacher_turma",
+            joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "turma_id")
+    )
+    @JsonManagedReference
+    @ToString.Exclude
+    private List<Turma> turmas;
+
+    @ManyToMany
+    @JoinTable(
+            name = "TEACHER_DISCIPLINA",
+            joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "disciplina_id")
+    )
+    @JsonManagedReference
+    private List<Disciplina> disciplinas;
+
+    public Teacher(Integer id, String name, LocalDate age,
+                   Sex sex, String address, String cpf) {
         this.id = id;
         this.name = name;
         this.age = age;

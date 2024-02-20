@@ -1,10 +1,11 @@
 package com.api.register.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,9 +14,8 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@Entity
+@Entity @Table(name = "tb_turma")
 public class Turma implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -24,7 +24,15 @@ public class Turma implements Serializable {
     private Integer id;
     private String nome;
     private Integer ano;
-    private List<Student> studentList;
+
+    @OneToMany(mappedBy = "turma")
+    @JsonManagedReference
+    private List<Student> students;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    @JsonBackReference
+    private Teacher teacher;
 
     public Turma(Integer id, String nome, Integer ano) {
         this.id = id;

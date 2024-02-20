@@ -1,10 +1,10 @@
 package com.api.register.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,9 +13,8 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@Entity
+@Entity @Table(name = "tb_disciplina")
 public class Disciplina implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -23,8 +22,16 @@ public class Disciplina implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
-    private List<Turma> turmaList;
-    private List<Teacher> teacherList;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "disciplinas")
+    private List<Student> students;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
 
     public Disciplina(Integer id, String nome) {
         this.id = id;

@@ -1,9 +1,7 @@
 package com.api.register.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
@@ -15,7 +13,7 @@ import java.util.Objects;
 @ToString
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor @Builder
+@AllArgsConstructor @Builder @Table(name = "tb_notas")
 public class Notas implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -23,8 +21,16 @@ public class Notas implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Double valor;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    @JsonBackReference
     private Student student;
-    private Disciplina disciplina;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    @JsonBackReference
+    private Teacher teacher;
 
     @Override
     public boolean equals(Object o) {
